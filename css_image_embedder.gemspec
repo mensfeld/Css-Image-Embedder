@@ -6,7 +6,6 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Maciej Mensfeld"]
-  s.cert_chain = ["/home/mencio/.cert_keys/gem-public_cert.pem"]
   s.date = %q{2011-04-09}
   s.description = %q{Css Image Embedder puts your background files directly into corresponding CSS file. Thanks to that - your server needs to handle fewer requests and the page layout renders smoothly (whole stylesheet at once).}
   s.email = %q{maciej@mensfeld.pl}
