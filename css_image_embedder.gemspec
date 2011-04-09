@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{css_image_embedder}
   s.rubygems_version = %q{1.5.2}
-  s.signing_key = %q{/home/mencio/.cert_keys/gem-private_key.pem}
   s.summary = %q{Css Image Embedder puts your background files directly into corresponding CSS file. Thanks to that - your server needs to handle fewer requests and the page layout renders smoothly (whole stylesheet at once).}
 
   if s.respond_to? :specification_version then
