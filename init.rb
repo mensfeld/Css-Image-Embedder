@@ -1,0 +1,1 @@
+require 'css_image_embedder'

@@ -1,0 +1,6 @@
+#test {
+  background: url('filesss/bg.png');
+}
+#test { background: url('filess/bg.png') no-repeat; }
+#test { background: url('filess/bg.png') repeat-x; }
+#test { background: black url('fileas/bg.png') repeat-x; }

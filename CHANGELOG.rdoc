@@ -1,0 +1,5 @@
+= Version 0.1.1
+* Fixed compressed (one line) embeds
+
+= Version 0.1.0
+* Gem existence started
