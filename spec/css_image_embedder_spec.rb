@@ -17,6 +17,7 @@ def files_equal?(f1, f2)
 end
 
 describe CssImageEmbedder::Converter do
+
   subject { CssImageEmbedder::Converter }
 
   # Should clear all css files created in test
@@ -134,6 +135,33 @@ describe CssImageEmbedder::Converter do
         converter.convert
         converter.result.should == file_content("#{FILES_ROOT}/oneliner_converted.css")
       end
+    end
+  end
+  
+end
+
+describe CssImageEmbedder::Compressor do
+
+  subject { CssImageEmbedder::Compressor }
+
+  context "when we have a CSS file withount anything special" do
+    context "and it is in multiply lines" do
+      it "should compress it" do
+        s = subject.new(ROOT)
+        css = '
+          #test  { background: #ffffff; }
+          #test2 { background: #000000; }
+        '
+        s.compress(css).should == "#test{background:#ffffff}#test2{background:#000000}\n"
+      end
+    end
+  end
+
+  context "when we have CSS file without any strange stuff" do
+    it "should convert std css file and embed pictures into it" do
+      s = subject.new(ROOT)
+      sass = Sass::Engine.new(file_content("#{FILES_ROOT}/std_converted.css"), :syntax => :scss, :style => :compressed)
+      s.compress(file_content("#{FILES_ROOT}/std.css")).should=== sass.render
     end
   end
   

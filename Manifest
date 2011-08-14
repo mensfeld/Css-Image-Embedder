@@ -3,9 +3,12 @@ Gemfile
 LICENCE
 README.md
 Rakefile
+css_image_embedder.gemspec
 init.rb
 lib/css_image_embedder.rb
+lib/css_image_embedder/compressor.rb
 lib/css_image_embedder/converter.rb
+lib/css_image_embedder/engine.rb
 lib/css_image_embedder/exception.rb
 lib/css_image_embedder/helper.rb
 spec/css_image_embedder_spec.rb
