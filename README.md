@@ -1,12 +1,14 @@
 # CSS Image Embedder
 
-Css Image Embedder puts your background files directly into corresponding CSS file. Thanks to that - your server needs to handle fewer requests and the page layout renders smoothly (whole stylesheet at once).
+Css Image Embedder puts your background files directly into corresponding CSS file. Thanks to this - your server needs to handle fewer requests and the page layout renders smoothly (whole stylesheet at once).
 
 ## INSTALL
   
     gem install css_image_embedder
 
 # USAGE
+
+## Rails 3.0
 
 Add gem to your gemfile:
 
@@ -18,10 +20,18 @@ and then you will gain a helper method called `image_embed_stylesheet_link_tag`.
 
 method will act the same way as `stylesheet_link_tag`. Also - you will not see any effect in development environment (except when you turn caching on).
 
+## Rails 3.1
+
+In environments/production.rb:
+
+    config.assets.css_compressor = CssImageEmbedder::Compressor.new(File.join(Rails.root, 'public'))
+
 ## Disadvantages
 
 Css Image Embedder has one major disadvantage. Files converted into base64 are approximately 30% bigger then normal, so when you embed them into CSS file, the total size of CSS with backgrounds will not be equal to sum of CSS file and backgrounds files. However, if you use gzip compression on your server - it will compress CSS file and the total size will be approximately equal. So just turn gzip compression on :)
 ## Example
+
+### Rails 3.0 (and probably 2.3.7 ;) )
 
 Suppose we have two backgrounds: `bg1.png` and `bg2.jpg` and two CSS files (each for background declaration): `first.css` and `second.css`. 
 
@@ -42,6 +52,11 @@ Now lets just use them in our layout:
     
 This will produce nice `cached_stylesheet` with both background images embedded directly into cached CSS file.
 
+### Rails 3.1
+
+We set up CssImageEmbedder::Compressor as a css compressor and... thats all :)
+
+    config.assets.css_compressor = CssImageEmbedder::Compressor.new(File.join(Rails.root, 'public'))
 
 ## Note on Patches/Pull Requests
  
