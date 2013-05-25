@@ -1,77 +1,47 @@
-require 'base64'
-
-# Css image embedder engine - used to embed images into CSS
+# Css image embedder engine - used to embed images into CSS files
 module CssImageEmbedder
   class Engine
 
-    # img_root - root of imgs position ( public/ in Rails)
-    # img_max_size - maximum file size (in kb) - bigger will not be embedded
-    def initialize(img_root, img_max_size = 32)
-      @img_root = img_root
-      @img_max_size = img_max_size*1024
+    EXTRACT_REGEXP = /url\(.+?\)/i
+
+    # @param [String] root of imgs position - this needs to be an absolute
+    #   path, so we need to join it with Rails.root if we use Rails
+    # @param [Integer] maximum file size (in kb) - bigger will not be embedded
+    # @return [CssImageEmbedder::Engine] instance
+    # @example
+    #   CssImageEmbedder::Engine.new(ASSET_IMAGE_LIMIT)
+    #   CssImageEmbedder::Engine.new
+    def initialize(img_max_size = 32)
+      @image_root = File.join(Rails.root, 'app')
+      @image_max_size = img_max_size*1024
     end
 
-    def compress(string)
-      if elements = pull(string)
-        source = string
-        elements.each do |el|
-          file_base64 = File.join(@img_root, el[:converted_path])
-          file_ext = el[:converted_path].split('.').last
-          begin
-            next if File.size?(file_base64) > @img_max_size
-            file_base64 = self.class.file_to_base64(file_base64)
-            source.gsub!(el[:original_url], "url(data:image/#{file_ext.downcase};base64,#{file_base64})")
-          rescue
-            next
-          end
+    # @param [String] content of a CSS file in which we want to embed pictures
+    # @return [String] content of a CSS file with embedded pictures
+    # @example
+    #   engine.compress(@css_content)
+    def compress(css)
+      images(css).each do |image|
+        begin
+          next if File.size?(image.file_path) > @image_max_size
+          css.gsub!(image.css_url, "url(data:image/#{image.ext};base64,#{image.to_base64})")
+        rescue
+          next
         end
-        @result = source
-      else
-        @result = string
       end
+      css
     end
-
-    # Convert to base64 without new lines
-    def self.file_to_base64(path)
-      str = File.open(path, 'r') { |file| file.read }
-      Base64.encode64(str).gsub("\n", '')
-    end
-
 
     private
-    
-    # Pulls out files paths from url(smthng)
-    # Returns an array containing:
-    # - original path  (./images/smthng.png)
-    # - converted path (/images/smthng.png)
-    # - original url   (url(./images/smthng.png))
-    def pull(css)
-      # Whole urls including  stuff around (url('/images/smthng.png') )
-      whole_urls = css.scan(/url\(.+?\)/i)
-      return nil if whole_urls.count == 0
 
-      img_bg_paths = []
-      whole_urls.each do |url|
-        img_bg_paths << url.scan(/url\(\s*["']?([^"']+)["']?\s*\)/i)[0][0]
-      end
-      img_bg_paths_original = img_bg_paths.clone
-
-      img_bg_paths.collect! do |img|
-        img = img.gsub('./', '/')
-        img = "/#{img}" if img[0] != '/'
-        img
-      end
-
-      result = []
-      img_bg_paths.each_with_index do |el, i|
-        result <<
-          {:original_path =>img_bg_paths_original[i],
-          :converted_path => el,
-          :original_url => whole_urls[i]
-          }
-      end
-      result.uniq!
-      result
+    # Extracts all the images paths from input CSS string. It extracts
+    # CSS urls with a regular expression
+    # 
+    # @param [String] CSS input content (css file content)
+    # @return [Array<CssImageEmbedder::Image>] returns all the images that
+    #   were used in given css file.
+    def images(css)
+      css.scan(EXTRACT_REGEXP).collect { |img| Image.new(img, @image_root) }
     end
 
   end

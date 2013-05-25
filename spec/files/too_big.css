@@ -1,6 +1,0 @@
-#test {
-  background: url('files/too_big.jpg');
-}
-#test { background: url('files/too_big.jpg') no-repeat; }
-#test { background: url('files/too_big.jpg') repeat-x; }
-#test { background: black url('files/too_big.jpg') repeat-x; }

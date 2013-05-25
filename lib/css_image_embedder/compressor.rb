@@ -6,16 +6,18 @@ require 'sass'
 module CssImageEmbedder
   class Compressor
 
-    # img_root - root of imgs position ( public/ in Rails)
-    # img_max_size - maximum file size (in kb) - bigger will not be embedded
-    def initialize(img_root, img_max_size = 32)
-      @img_root = img_root
-      @img_max_size = img_max_size
+    # @param [Integer] max image size that will be embedded (in KB)
+    # @return [CssImageEmbedder::Compressor] compressor instance
+    def initialize(img_max_size = 32)
+      @engine = CssImageEmbedder::Engine.new(img_max_size)
     end
 
+    # Compress given CSS/SCSS file and embed into it images
+    # @params [String] CSS/SCSS input
+    # @return [String] CSS file content with embedded images
     def compress(string)
-      engine = Sass::Engine.new(string, :syntax => :scss, :style => :compressed)
-      CssImageEmbedder::Engine.new(@img_root, @img_max_size).compress(engine.render)
+      sass = Sass::Engine.new(string, syntax: :scss, style: :compressed)
+      @engine.compress(sass.render)
     end
   end
 end

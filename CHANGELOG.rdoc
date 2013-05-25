@@ -1,3 +1,13 @@
+= Version 0.3.0
+* Removed Rails 2.3 compatibility
+* Removed Rails 3.0 compatibility
+* Removed Rails 3.1 compatibility
+* Removed Ruby 1.8 compatibility
+* Removed non-rails app support
+* Huge refactoring
+* Docs are now in yard
+* Easier asset pipeline integration
+
 = Version 0.1.1
 * Fixed compressed (one line) embeds
 
