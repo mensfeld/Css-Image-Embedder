@@ -8,6 +8,7 @@ Echoe.new('css_image_embedder', '0.3.0') do |p|
   p.url            = "https://github.com/mensfeld/Css-Image-Embedder"
   p.author         = "Maciej Mensfeld"
   p.email          = "maciej@mensfeld.pl"
+  p.license        = 'MIT'
   p.ignore_pattern = ["tmp/*", "script/*"]
   p.development_dependencies = ["rspec >=2.0.0"]
   p.dependencies = ["sass"]
